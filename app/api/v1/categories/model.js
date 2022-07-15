@@ -15,7 +15,7 @@ let categorySchema = Schema(
             required: true,
         },
     },
-    { timeStamps: true }
+    { timestamps: true }
 );
 
 module.exports = model("Category", categorySchema);

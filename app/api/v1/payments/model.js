@@ -21,7 +21,7 @@ let paymentSchema = Schema(
             required: true,
         },
     },
-    { timeStamps: true }
+    { timestamps: true }
 );
 
 module.exports = model("Payment", paymentSchema);

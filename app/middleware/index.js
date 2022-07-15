@@ -26,6 +26,13 @@ const logHandler = (req, res, next) => {
             bJSON.password = "********";
         }
 
+        if (
+            req.body.confirmPassword !== null &&
+            req.body.confirmPassword !== undefined
+        ) {
+            bJSON.confirmPassword = "********";
+        }
+
         console.log(JSON.stringify(bJSON, null, 4));
     }
 

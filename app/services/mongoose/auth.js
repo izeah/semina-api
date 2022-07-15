@@ -28,7 +28,6 @@ const signin = async (req) => {
 
     // delete password on response
     delete result.password;
-    delete result.__v;
     result.token = token;
 
     return result;

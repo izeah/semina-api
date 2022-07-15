@@ -31,7 +31,7 @@ let orderSchema = Schema(
         },
         personalDetail: Object,
     },
-    { timeStamps: true }
+    { timestamps: true }
 );
 
 module.exports = model("Order", orderSchema);

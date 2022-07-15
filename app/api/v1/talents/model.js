@@ -22,7 +22,7 @@ let talentSchema = Schema(
             required: true,
         },
     },
-    { timeStamps: true }
+    { timestamps: true }
 );
 
 module.exports = model("Talent", talentSchema);

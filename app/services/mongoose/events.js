@@ -24,10 +24,10 @@ const getAllEvents = async (req) => {
         condition = { ...condition, talent: talent };
     }
 
-    if (["DRAFT", "PUBLISHED"].includes(status)) {
+    if (["DRAFT", "PUBLISHED"].includes(status.toUpperCase())) {
         condition = {
             ...condition,
-            statusEvent: status,
+            statusEvent: status.toUpperCase(),
         };
     }
 
@@ -180,16 +180,12 @@ const updateStatusEvents = async (req) => {
     const { id } = req.params;
     const { statusEvent } = req.body;
 
-    if (!["DRAFT", "PUBLISHED"].includes(statusEvent)) {
-        throw new BadRequestError('Status harus "DRAFT" atau "PUBLISHED"');
-    }
-
     const result = await Events.findOneAndUpdate(
         { _id: id, organizer: req.user.organizer },
         {
             statusEvent: statusEvent,
         },
-        { new: true }
+        { new: true, runValidators: true }
     );
 
     if (!result) throw new NotFoundError(`Tidak ada event dengan id : ${id}`);

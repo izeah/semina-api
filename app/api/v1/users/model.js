@@ -41,10 +41,10 @@ let userSchema = Schema(
             required: true,
         },
     },
-    { timeStamps: true }
+    { timestamps: true }
 );
 
-userSchema.pre("save", async (next) => {
+userSchema.pre("save", async function (next) {
     const User = this;
     if (User.isModified("password")) {
         User.password = await bcrypt.hash(User.password, 12);
@@ -53,12 +53,12 @@ userSchema.pre("save", async (next) => {
     next();
 });
 
-userSchema.methods.comparePassword = async (password) => {
+userSchema.methods.comparePassword = async function (password) {
     const isMatch = await bcrypt.compare(password, this.password);
     return isMatch;
 };
 
-userSchema.methods.generateToken = () => {
+userSchema.methods.generateToken = function () {
     const token = jwt.sign(
         {
             id: this._doc._id,

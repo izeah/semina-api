@@ -10,7 +10,7 @@ let organizerSchema = Schema(
             maxLength: [20, "Panjang nama penyelenggara maksimal 20 karakter"],
         },
     },
-    { timeStamps: true }
+    { timestamps: true }
 );
 
 module.exports = model("Organizer", organizerSchema);
