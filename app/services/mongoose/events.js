@@ -44,6 +44,10 @@ const getAllEvents = async (req) => {
             path: "talent",
             select: "_id name role image",
             populate: { path: "image", select: "_id name" },
+        })
+        .populate({
+            path: "organizer",
+            select: "_id organizer",
         });
 
     return result;
@@ -84,6 +88,7 @@ const createEvents = async (req) => {
         image,
         talent,
         tickets,
+        organizer: req.user.organizer,
     });
 
     return result;
@@ -108,6 +113,10 @@ const getOneEvents = async (req) => {
             path: "talent",
             select: "_id name role image",
             populate: { path: "image", select: "_id name" },
+        })
+        .populate({
+            path: "organizer",
+            select: "_id organizer",
         });
 
     if (!result) throw new NotFoundError(`Tidak ada event dengan id : ${id}`);
@@ -141,7 +150,7 @@ const updateEvents = async (req) => {
         _id: { $ne: id },
     });
 
-    if (check) throw new BadRequestError("judul event duplikat");
+    if (check) throw new BadRequestError("judul event sudah terdaftar");
 
     const result = await Events.findOneAndUpdate(
         { _id: id },
@@ -157,6 +166,7 @@ const updateEvents = async (req) => {
             image,
             talent,
             tickets,
+            organizer: req.user.organizer,
         },
         { new: true, runValidators: true }
     );
@@ -168,15 +178,16 @@ const updateEvents = async (req) => {
 
 const updateStatusEvents = async (req) => {
     const { id } = req.params;
+    const { statusEvent } = req.body;
 
-    if (!["DRAFT", "PUBLISHED"].includes(status)) {
+    if (!["DRAFT", "PUBLISHED"].includes(statusEvent)) {
         throw new BadRequestError('Status harus "DRAFT" atau "PUBLISHED"');
     }
 
     const result = await Events.findOneAndUpdate(
         { _id: id, organizer: req.user.organizer },
         {
-            statusEvent: "PUBLISHED",
+            statusEvent: statusEvent,
         },
         { new: true }
     );

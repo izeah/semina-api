@@ -9,20 +9,40 @@ const {
     updateStatus,
 } = require("./controller");
 
-router.post("/events", authentication, authorization("ORGANIZER"), create);
-router.get("/events", authentication, authorization("ORGANIZER"), index);
-router.get("/events/:id", authentication, authorization("ORGANIZER"), find);
-router.put("/events/:id", authentication, authorization("ORGANIZER"), update);
+router.post(
+    "/events",
+    authentication,
+    authorization("ORGANIZER", "ADMIN"),
+    create
+);
+router.get(
+    "/events",
+    authentication,
+    authorization("ORGANIZER", "ADMIN"),
+    index
+);
+router.get(
+    "/events/:id",
+    authentication,
+    authorization("ORGANIZER", "ADMIN"),
+    find
+);
+router.put(
+    "/events/:id",
+    authentication,
+    authorization("ORGANIZER", "ADMIN"),
+    update
+);
 router.put(
     "/events/:id/status",
     authentication,
-    authorization("ORGANIZER"),
+    authorization("ORGANIZER", "ADMIN"),
     updateStatus
 );
 router.delete(
     "/events/:id",
     authentication,
-    authorization("ORGANIZER"),
+    authorization("ORGANIZER", "ADMIN"),
     destroy
 );
 

@@ -16,7 +16,11 @@ const getAllTalents = async (req) => {
             path: "image",
             select: "_id name",
         })
-        .select("_id name role image");
+        .populate({
+            path: "organizer",
+            select: "_id organizer",
+        })
+        .select("_id name role image organizer");
 
     return result;
 };
@@ -26,11 +30,19 @@ const createTalents = async (req) => {
 
     await checkImage(image);
 
-    const check = await Talents.findOne({ name });
+    const check = await Talents.findOne({
+        name,
+        organizer: req.user.organizer,
+    });
 
     if (check) throw new BadRequestError("Pembicara sudah terdaftar");
 
-    const result = await Talents.create({ name, image, role });
+    const result = await Talents.create({
+        name,
+        image,
+        role,
+        organizer: req.user.organizer,
+    });
 
     return result;
 };
@@ -38,9 +50,16 @@ const createTalents = async (req) => {
 const getOneTalents = async (req) => {
     const { id } = req.params;
 
-    const result = await Talents.findOne({ _id: id })
+    const result = await Talents.findOne({
+        _id: id,
+        organizer: req.user.organizer,
+    })
         .populate({ path: "image", select: "_id name" })
-        .select("_id name role image");
+        .populate({
+            path: "organizer",
+            select: "_id organizer",
+        })
+        .select("_id name role image organizer");
 
     if (!result)
         throw new NotFoundError(`Tidak ada pembicara dengan id : ${id}`);
@@ -63,13 +82,17 @@ const updateTalents = async (req) => {
 
     await checkImage(image);
 
-    const check = await Talents.findOne({ name, _id: { $ne: id } });
+    const check = await Talents.findOne({
+        name,
+        organizer: req.user.organizer,
+        _id: { $ne: id },
+    });
 
     if (check) throw new BadRequestError("Pembicara sudah terdaftar");
 
     const result = await Talents.findOneAndUpdate(
         { _id: id },
-        { name, image, role },
+        { name, image, role, organizer: req.user.organizer },
         { new: true, runValidators: true }
     );
 
@@ -82,7 +105,10 @@ const updateTalents = async (req) => {
 const deleteTalents = async (req) => {
     const { id } = req.params;
 
-    const result = await Talents.findOne({ _id: id });
+    const result = await Talents.findOne({
+        _id: id,
+        organizer: req.user.organizer,
+    });
 
     if (!result)
         throw new NotFoundError(`Tidak ada pembicara dengan id : ${id}`);
