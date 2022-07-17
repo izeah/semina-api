@@ -1,35 +1,139 @@
 const mongoose = require("mongoose");
 const { model, Schema } = mongoose;
 
+let orderDetailSchema = Schema({
+    ticketCategories: {
+        type: {
+            type: String,
+            required: [true, "Tipe tiket harus diisi"],
+        },
+        price: {
+            type: Number,
+            default: 0,
+        },
+    },
+    sumTicket: {
+        type: Number,
+        required: true,
+    },
+});
+
 let orderSchema = Schema(
     {
         date: {
             type: Date,
-            required: [true, "Tanggal dan waktu harus diisi"],
+            required: [true, "Tanggal harus diisi"],
+        },
+        personalDetail: {
+            firstName: {
+                type: String,
+                required: [true, "Please provide firstName"],
+                minlength: 3,
+                maxlength: 50,
+            },
+            lastName: {
+                type: String,
+                required: [true, "Please provide lastName"],
+                minlength: 3,
+                maxlength: 50,
+            },
+            email: {
+                type: String,
+                required: [true, "Please provide email"],
+            },
+            role: {
+                type: String,
+                // default: "designer"
+            },
         },
         status: {
             type: String,
             enum: {
-                values: ["DRAFT", "PUBLISHED"], // todo: status order
+                values: ["PENDING", "PAID"],
                 message:
-                    "Status event harus diisi dengan nilai 'DRAFT' atau 'PUBLISHED'",
+                    "Status event harus diisi dengan nilai 'PENDING' atau 'PAID'",
             },
-            default: "Draft",
+            default: "PENDING",
         },
         totalPay: {
             type: Number,
-            default: 0,
+            required: true,
         },
         totalOrderTicket: {
             type: Number,
-            default: 0,
+            required: true,
+        },
+        orderItems: [orderDetailSchema],
+        participant: {
+            type: mongoose.Types.ObjectId,
+            ref: "Participant",
+            required: true,
+        },
+        payment: {
+            type: mongoose.Types.ObjectId,
+            ref: "Payment",
+            required: true,
         },
         event: {
             type: mongoose.Types.ObjectId,
             ref: "Event",
             required: true,
         },
-        personalDetail: Object,
+        historyEvent: {
+            // title: {
+            //   type: String,
+            //   required: [true, 'Judul harus diisi'],
+            //   minlength: 3,
+            //   maxlength: 50,
+            // },
+            // date: {
+            //   type: Date,
+            //   required: [true, 'Tanggal dan waktu harus diisi'],
+            // },
+            // about: {
+            //   type: String,
+            // },
+            // tagline: {
+            //   type: String,
+            //   required: [true, 'Tagline harus diisi'],
+            // },
+            // keyPoint: {
+            //   type: [String],
+            // },
+            // venueName: {
+            //   type: String,
+            //   required: [true, 'Tempat acara harus diisi'],
+            // },
+            // statusEvent: {
+            //   type: String,
+            //   enum: ['Draft', 'Published'],
+            //   default: 'Draft',
+            // },
+            // tickets: {
+            //   type: [ticketCategoriesSchema],
+            //   required: true,
+            // },
+            // image: {
+            //   type: mongoose.Types.ObjectId,
+            //   ref: 'Image',
+            //   required: true,
+            // },
+            // category: {
+            //   type: mongoose.Types.ObjectId,
+            //   ref: 'Category',
+            //   required: true,
+            // },
+            // talent: {
+            //   type: mongoose.Types.ObjectId,
+            //   ref: 'Talent',
+            //   required: true,
+            // },
+            organizer: {
+                type: mongoose.Types.ObjectId,
+                ref: "Organizer",
+                required: true,
+            },
+        },
     },
     { timestamps: true }
 );

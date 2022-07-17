@@ -4,6 +4,9 @@ dotenv.config();
 module.exports = {
     urlDb: process.env.URL_MONGODB,
     jwtSecret: process.env.JWT_SECRET,
-    jwtExpirationTime: "72h", // 3 days
-    jwtRefreshExpirationTime: "168h", // 7 days (1 week)
+    jwtExpirationTime: process.env.JWT_EXPIRATION_TIME,
+    jwtRefreshExpirationTime: process.env.JWT_REFRESH_EXPIRATION_TIME,
+    smtpUsername: process.env.SMTP_USERNAME,
+    smtpPassword: process.env.SMTP_PASSWORD,
+    smtpSender: process.env.SMTP_SENDER,
 };

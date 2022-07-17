@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const { index, find, create, destroy, update } = require("./controller");
-const { authentication, authorization } = require("../../../middleware");
+const { authentication, authorization } = require("../../../middlewares");
 
 router.post("/categories", authentication, authorization("ORGANIZER"), create);
 router.get("/categories", authentication, authorization("ORGANIZER"), index);

@@ -1,4 +1,8 @@
-const { authentication, authorization } = require("./auth");
+const {
+    authentication,
+    participantAuthentication,
+    authorization,
+} = require("./auth");
 const errorHandlerMiddleware = require("./error");
 const logHandler = (req, res, next) => {
     console.log(
@@ -57,6 +61,7 @@ module.exports = {
     errorInternalServer,
     errorHandlerMiddleware,
     authentication,
+    participantAuthentication,
     authorization,
     logHandler,
 };

@@ -4,7 +4,7 @@ const {
     createCMSUser,
     getAllCMSUsers,
 } = require("./controller");
-const { authentication, authorization } = require("../../../middleware");
+const { authentication, authorization } = require("../../../middlewares");
 
 router.post(
     "/organizers",

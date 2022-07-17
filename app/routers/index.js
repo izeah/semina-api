@@ -6,4 +6,6 @@ module.exports = {
     paymentsRouter: require("../api/v1/payments/router"),
     authRouter: require("../api/v1/auth/router"),
     organizersRouter: require("../api/v1/organizers/router"),
+    ordersRouter: require("../api/v1/orders/router"),
+    participantsRouter: require("../api/v1/participants/router"),
 };

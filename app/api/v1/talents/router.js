@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { authentication, authorization } = require("../../../middleware");
+const { authentication, authorization } = require("../../../middlewares");
 const { index, find, create, destroy, update } = require("./controller");
 
 router.post("/talents", authentication, authorization("ORGANIZER"), create);

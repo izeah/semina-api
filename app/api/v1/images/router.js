@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const { create } = require("./controller");
-const upload = require("../../../middleware/multer");
-const { authentication, authorization } = require("../../../middleware");
+const upload = require("../../../middlewares/multer");
+const { authentication, authorization } = require("../../../middlewares");
 
 router.post(
     "/images",

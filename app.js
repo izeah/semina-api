@@ -11,7 +11,7 @@ const {
     errorInternalServer,
     errorHandlerMiddleware,
     logHandler,
-} = require("./app/middleware");
+} = require("./app/middlewares");
 
 app.use(logger("dev"));
 app.use(express.json());
@@ -20,7 +20,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(logHandler);
 
-const CMS_API_V1 = "/api/v1/cms";
+const API_V1 = "/api/v1";
 const {
     categoriesRouter,
     talentsRouter,
@@ -29,6 +29,8 @@ const {
     paymentsRouter,
     authRouter,
     organizersRouter,
+    ordersRouter,
+    participantsRouter,
 } = require("./app/routers");
 
 // routes-list...
@@ -37,16 +39,22 @@ app.get("/", (req, res) => {
         message: "Welcome to api semina",
     });
 });
+
+// CMS v1 endpoints
 app.use(
-    CMS_API_V1,
+    `${API_V1}/cms`,
     categoriesRouter,
     talentsRouter,
     imagesRouter,
     eventsRouter,
     paymentsRouter,
     organizersRouter,
-    authRouter
+    authRouter,
+    ordersRouter
 );
+
+// v1 endpoints
+app.use(API_V1, participantsRouter);
 
 // register middleware API error handling
 app.use(errorRouteNotFound);

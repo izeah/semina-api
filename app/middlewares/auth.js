@@ -44,6 +44,47 @@ const authentication = (req, res, next) => {
     }
 };
 
+const participantAuthentication = (req, res, next) => {
+    try {
+        const authHeader = req.headers.authorization;
+        if (
+            authHeader === null ||
+            authHeader === "" ||
+            typeof authHeader === "undefined"
+        )
+            throw new Unauthenticated("Invalid authentication");
+
+        const token = authHeader.startsWith("Bearer")
+            ? authHeader.split(" ")[1]
+            : authHeader;
+
+        jwt.verify(
+            token,
+            jwtSecret,
+            { algorithms: "HS512" },
+            (err, payload) => {
+                if (err)
+                    throw new Unauthenticated(
+                        err.message ||
+                            "Unauthorized, please login with a valid credential"
+                    );
+
+                // Attach the user and his permissions to the req object
+                req.participant = {
+                    lastName: payload.lastName,
+                    id: payload.id,
+                    firstName: payload.firstName,
+                    email: payload.email,
+                };
+
+                next(err);
+            }
+        );
+    } catch (err) {
+        next(err);
+    }
+};
+
 const authorization = (...roles) => {
     return (req, res, next) => {
         if (!roles.includes(req.user.role)) {
@@ -54,4 +95,4 @@ const authorization = (...roles) => {
     };
 };
 
-module.exports = { authentication, authorization };
+module.exports = { authentication, participantAuthentication, authorization };
