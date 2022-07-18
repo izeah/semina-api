@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const { jwtSecret, jwtExpirationTime } = require("../../../config");
 
 let participantSchema = new mongoose.Schema(
     {

@@ -75,13 +75,13 @@ const signinParticipant = async (req) => {
         throw new BadRequestError("Please provide email and password");
     }
 
-    const result = await Participants.findOne({ email: email });
+    let result = await Participants.findOne({ email: email });
 
     if (!result) {
         throw new Unauthorized("Invalid Credentials");
     }
 
-    if (result.status === "tidak aktif") {
+    if (result.status === "nonaktif") {
         throw new Unauthorized("Akun anda belum aktif");
     }
 
