@@ -105,7 +105,7 @@ const signinParticipant = async (req) => {
 };
 
 const getAllEvents = async (req) => {
-    const result = await Events.find({ statusEvent: "Published" })
+    const result = await Events.find({ statusEvent: "PUBLISHED" })
         .populate("category")
         .populate("image")
         .select("_id title date tickets venueName");
