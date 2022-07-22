@@ -5,6 +5,7 @@ const {
     getAllEvents,
     getOneEvent,
     getAllOrders,
+    checkoutOrder,
 } = require("../../../services/mongoose/participants");
 
 const { StatusCodes } = require("http-status-codes");
@@ -13,7 +14,7 @@ const signup = async (req, res, next) => {
     try {
         const result = await signupParticipant(req);
 
-        res.status(StatusCodes.CREATED).json({
+        return res.status(StatusCodes.CREATED).json({
             data: { token: result },
         });
     } catch (err) {
@@ -25,7 +26,7 @@ const activeParticipant = async (req, res, next) => {
     try {
         const result = await activateParticipant(req);
 
-        res.status(StatusCodes.OK).json({
+        return res.status(StatusCodes.OK).json({
             data: { token: result },
         });
     } catch (err) {
@@ -37,7 +38,7 @@ const signin = async (req, res, next) => {
     try {
         const result = await signinParticipant(req);
 
-        res.status(StatusCodes.OK).json({
+        return res.status(StatusCodes.OK).json({
             data: { token: result },
         });
     } catch (err) {
@@ -49,7 +50,7 @@ const getAllLandingPage = async (req, res, next) => {
     try {
         const result = await getAllEvents(req);
 
-        res.status(StatusCodes.OK).json({
+        return res.status(StatusCodes.OK).json({
             data: result,
         });
     } catch (err) {
@@ -60,7 +61,7 @@ const getDashboard = async (req, res, next) => {
     try {
         const result = await getAllOrders(req);
 
-        res.status(StatusCodes.OK).json({
+        return res.status(StatusCodes.OK).json({
             data: result,
         });
     } catch (err) {
@@ -72,9 +73,23 @@ const getDetailLandingPage = async (req, res, next) => {
     try {
         const result = await getOneEvent(req);
 
-        res.status(StatusCodes.OK).json({
+        return res.status(StatusCodes.OK).json({
             data: result,
         });
+    } catch (err) {
+        next(err);
+    }
+};
+
+const checkout = async (req, res, next) => {
+    try {
+        const result = await checkoutOrder(req);
+
+        // return res.status(StatusCodes.CREATED).json({
+        //     data: result,
+        // });
+
+        return res.status(StatusCodes.OK).send(result);
     } catch (err) {
         next(err);
     }
@@ -87,4 +102,5 @@ module.exports = {
     getAllLandingPage,
     getDetailLandingPage,
     getDashboard,
+    checkout,
 };

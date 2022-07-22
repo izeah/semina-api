@@ -1,10 +1,16 @@
 const router = require("express").Router();
+const { authentication, authorization } = require("../../../middlewares");
 const { index, find, create, destroy, update } = require("./controller");
 
-router.post("/payments", create);
-router.get("/payments", index);
-router.get("/payments/:id", find);
-router.put("/payments/:id", update);
-router.delete("/payments/:id", destroy);
+router.post("/payments", authentication, authorization("ORGANIZER"), create);
+router.get("/payments", authentication, authorization("ORGANIZER"), index);
+router.get("/payments/:id", authentication, authorization("ORGANIZER"), find);
+router.put("/payments/:id", authentication, authorization("ORGANIZER"), update);
+router.delete(
+    "/payments/:id",
+    authentication,
+    authorization("ORGANIZER"),
+    destroy
+);
 
 module.exports = router;

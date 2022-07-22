@@ -3,32 +3,35 @@ const { checkImage } = require("./images");
 const { NotFoundError, BadRequestError } = require("../../errors");
 
 const getAllPayments = async (req) => {
-    const { name } = req.query;
+    let condition = { organizer: req.user.organizer };
 
-    let condition = {};
-
-    if (name) {
-        condition = { ...condition, name: { $regex: name, $options: "i" } };
-    }
-
-    const result = await Payments.find(condition).populate({
-        path: "image",
-        select: "_id name",
-    });
+    const result = await Payments.find(condition)
+        .populate({
+            path: "image",
+            select: "_id name",
+        })
+        .select("_id type status image");
 
     return result;
 };
 
 const createPayments = async (req) => {
-    const { name, image } = req.body;
+    const { type, image } = req.body;
 
     await checkImage(image);
 
-    const check = await Payments.findOne({ name });
+    const check = await Payments.findOne({
+        type,
+        organizer: req.user.organizer,
+    });
 
-    if (check) throw new BadRequestError("Nama payment duplikat");
+    if (check) throw new BadRequestError("Tipe pembayaran duplikat");
 
-    const result = await Payments.create({ name, image });
+    const result = await Payments.create({
+        type,
+        image,
+        organizer: req.user.organizer,
+    });
 
     return result;
 };
@@ -36,33 +39,44 @@ const createPayments = async (req) => {
 const getOnePayments = async (req) => {
     const { id } = req.params;
 
-    const result = await Payments.findOne({ _id: id }).populate({
-        path: "image",
-        select: "_id name",
-    });
+    const result = await Payments.findOne({
+        _id: id,
+        organizer: req.user.organizer,
+    })
+        .populate({
+            path: "image",
+            select: "_id name",
+        })
+        .select("_id type status image");
 
-    if (!result) throw new NotFoundError(`Tidak ada payment dengan id : ${id}`);
+    if (!result)
+        throw new NotFoundError(`Tidak ada tipe pembayaran dengan id : ${id}`);
 
     return result;
 };
 
 const updatePayments = async (req) => {
     const { id } = req.params;
-    const { name, image } = req.body;
+    const { type, image } = req.body;
 
     await checkImage(image);
 
-    const check = await Payments.findOne({ name, _id: { $ne: id } });
+    const check = await Payments.findOne({
+        type,
+        organizer: req.user.organizer,
+        _id: { $ne: id },
+    });
 
-    if (check) throw new BadRequestError("Nama payment duplikat");
+    if (check) throw new BadRequestError("Tipe pembayaran duplikat");
 
     const result = await Payments.findOneAndUpdate(
         { _id: id },
-        { name, image },
+        { type, image, organizer: req.user.organizer },
         { new: true, runValidators: true }
     );
 
-    if (!result) throw new NotFoundError(`Tidak ada payment dengan id : ${id}`);
+    if (!result)
+        throw new NotFoundError(`Tidak ada tipe pembayaran dengan id : ${id}`);
 
     return result;
 };
@@ -70,11 +84,24 @@ const updatePayments = async (req) => {
 const deletePayments = async (req) => {
     const { id } = req.params;
 
-    const result = await Payments.findOne({ _id: id });
+    const result = await Payments.findOne({
+        _id: id,
+        organizer: req.user.organizer,
+    });
 
-    if (!result) throw new NotFoundError(`Tidak ada payment dengan id : ${id}`);
+    if (!result)
+        throw new NotFoundError(`Tidak ada tipe pembayaran dengan id : ${id}`);
 
     await result.remove();
+
+    return result;
+};
+
+const checkPayment = async (id) => {
+    const result = await Payments.findOne({ _id: id });
+
+    if (!result)
+        throw new NotFoundError(`Tidak ada tipe pembayaran dengan id :  ${id}`);
 
     return result;
 };
@@ -85,4 +112,5 @@ module.exports = {
     getOnePayments,
     updatePayments,
     deletePayments,
+    checkPayment,
 };

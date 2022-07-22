@@ -6,6 +6,7 @@ const {
     getAllLandingPage,
     getDetailLandingPage,
     getDashboard,
+    checkout,
 } = require("./controller");
 const { participantAuthentication } = require("../../../middlewares");
 
@@ -15,5 +16,6 @@ router.put("/active", activeParticipant);
 router.get("/events", getAllLandingPage);
 router.get("/events/:id", getDetailLandingPage);
 router.get("/orders", participantAuthentication, getDashboard);
+router.post("/checkout", participantAuthentication, checkout);
 
 module.exports = router;
