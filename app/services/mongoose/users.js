@@ -45,10 +45,12 @@ const createUsers = async (req) => {
 };
 
 const getAllUsers = async (req) => {
-    const result = await Users.find().populate({
-        path: "organizer",
-        select: "_id organizer",
-    });
+    const result = await Users.find()
+        .populate({
+            path: "organizer",
+            select: "_id organizer",
+        })
+        .select("_id name email role organizer");
 
     return result;
 };

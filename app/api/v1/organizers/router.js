@@ -18,6 +18,6 @@ router.post(
     authorization("ORGANIZER"),
     createCMSUser
 );
-router.get("/users", authentication, authorization("OWNER"), getAllCMSUsers);
+// router.get("/users", authentication, authorization("OWNER"), getAllCMSUsers);
 
 module.exports = router;

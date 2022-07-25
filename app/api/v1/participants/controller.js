@@ -15,7 +15,7 @@ const signup = async (req, res, next) => {
         const result = await signupParticipant(req);
 
         return res.status(StatusCodes.CREATED).json({
-            data: { token: result },
+            data: result,
         });
     } catch (err) {
         next(err);
