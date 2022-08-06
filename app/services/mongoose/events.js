@@ -150,13 +150,16 @@ const updateEvents = async (req) => {
         _id: { $ne: id },
     });
 
-    // delete event's previous image if data is updated
-    await deleteImage(check.image);
-
     if (check) throw new BadRequestError("judul event sudah terdaftar");
 
-    const result = await Events.findOneAndUpdate(
-        { _id: id },
+    const result = await Events.findOne({ _id: id });
+
+    if (!result) throw new NotFoundError(`Tidak ada event dengan id : ${id}`);
+
+    // delete event's previous image if data is updated
+    await deleteImage(result.image);
+
+    await result.update(
         {
             title,
             date,
@@ -173,8 +176,6 @@ const updateEvents = async (req) => {
         },
         { new: true, runValidators: true }
     );
-
-    if (!result) throw new NotFoundError(`Tidak ada event dengan id : ${id}`);
 
     return result;
 };

@@ -67,19 +67,20 @@ const updatePayments = async (req) => {
         _id: { $ne: id },
     });
 
-    // delete payment's previous image if data is updated
-    await deleteImage(check.image);
-
     if (check) throw new BadRequestError("Tipe pembayaran duplikat");
 
-    const result = await Payments.findOneAndUpdate(
-        { _id: id },
-        { type, image, organizer: req.user.organizer },
-        { new: true, runValidators: true }
-    );
+    const result = await Payments.findOne({ _id: id });
 
     if (!result)
         throw new NotFoundError(`Tidak ada tipe pembayaran dengan id : ${id}`);
+
+    // delete payment's previous image if data is updated
+    await deleteImage(result.image);
+
+    await result.update(
+        { type, image, organizer: req.user.organizer },
+        { new: true, runValidators: true }
+    );
 
     return result;
 };

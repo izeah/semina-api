@@ -88,19 +88,20 @@ const updateTalents = async (req) => {
         _id: { $ne: id },
     });
 
-    // delete talent's previous image if data is updated
-    await deleteImage(check.image);
-
     if (check) throw new BadRequestError("Pembicara sudah terdaftar");
 
-    const result = await Talents.findOneAndUpdate(
-        { _id: id },
-        { name, image, role, organizer: req.user.organizer },
-        { new: true, runValidators: true }
-    );
+    const result = await Talents.findOne({ _id: id });
 
     if (!result)
         throw new NotFoundError(`Tidak ada pembicara dengan id : ${id}`);
+
+    // delete talent's previous image if data is updated
+    await deleteImage(result.image);
+
+    await result.update(
+        { name, image, role, organizer: req.user.organizer },
+        { new: true, runValidators: true }
+    );
 
     return result;
 };
