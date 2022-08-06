@@ -1,5 +1,6 @@
 const Images = require("../../api/v1/images/model");
 const { NotFoundError } = require("../../errors");
+const { unlink } = require("fs/promises");
 
 const createImages = async (req) => {
     const result = await Images.create({
@@ -19,4 +20,17 @@ const checkImage = async (id) => {
     return result;
 };
 
-module.exports = { createImages, checkImage };
+const deleteImage = async (id) => {
+    const result = await Images.findOne({ _id: id });
+
+    if (!result) throw new NotFoundError(`Tidak ada gambar dengan id : ${id}`);
+
+    const imgDir = `${__dirname}/../../../public/${imageResult.name}`;
+    await unlink(imgDir);
+
+    await result.remove();
+
+    return result;
+};
+
+module.exports = { createImages, checkImage, deleteImage };

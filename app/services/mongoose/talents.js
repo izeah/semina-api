@@ -1,5 +1,5 @@
 const Talents = require("../../api/v1/talents/model");
-const { checkImage } = require("./images");
+const { checkImage, deleteImage } = require("./images");
 const { NotFoundError, BadRequestError } = require("../../errors");
 
 const getAllTalents = async (req) => {
@@ -88,6 +88,9 @@ const updateTalents = async (req) => {
         _id: { $ne: id },
     });
 
+    // delete talent's previous image if data is updated
+    await deleteImage(check.image);
+
     if (check) throw new BadRequestError("Pembicara sudah terdaftar");
 
     const result = await Talents.findOneAndUpdate(
@@ -114,6 +117,8 @@ const deleteTalents = async (req) => {
         throw new NotFoundError(`Tidak ada pembicara dengan id : ${id}`);
 
     await result.remove();
+
+    await deleteImage(result.image);
 
     return result;
 };

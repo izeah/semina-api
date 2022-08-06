@@ -67,6 +67,9 @@ const updatePayments = async (req) => {
         _id: { $ne: id },
     });
 
+    // delete payment's previous image if data is updated
+    await deleteImage(check.image);
+
     if (check) throw new BadRequestError("Tipe pembayaran duplikat");
 
     const result = await Payments.findOneAndUpdate(
@@ -93,6 +96,8 @@ const deletePayments = async (req) => {
         throw new NotFoundError(`Tidak ada tipe pembayaran dengan id : ${id}`);
 
     await result.remove();
+
+    await deleteImage(result.image);
 
     return result;
 };
