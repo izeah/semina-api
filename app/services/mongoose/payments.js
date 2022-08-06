@@ -75,7 +75,9 @@ const updatePayments = async (req) => {
         throw new NotFoundError(`Tidak ada tipe pembayaran dengan id : ${id}`);
 
     // delete payment's previous image if data is updated
-    await deleteImage(result.image);
+    if (result.image != image) {
+        await deleteImage(result.image);
+    }
 
     await result.update(
         { type, image, organizer: req.user.organizer },

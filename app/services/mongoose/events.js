@@ -157,7 +157,9 @@ const updateEvents = async (req) => {
     if (!result) throw new NotFoundError(`Tidak ada event dengan id : ${id}`);
 
     // delete event's previous image if data is updated
-    await deleteImage(result.image);
+    if (result.image != image) {
+        await deleteImage(result.image);
+    }
 
     await result.update(
         {

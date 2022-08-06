@@ -96,7 +96,9 @@ const updateTalents = async (req) => {
         throw new NotFoundError(`Tidak ada pembicara dengan id : ${id}`);
 
     // delete talent's previous image if data is updated
-    await deleteImage(result.image);
+    if (result.image != image) {
+        await deleteImage(result.image);
+    }
 
     await result.update(
         { name, image, role, organizer: req.user.organizer },
