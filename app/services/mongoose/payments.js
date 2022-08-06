@@ -1,5 +1,5 @@
 const Payments = require("../../api/v1/payments/model");
-const { checkImage } = require("./images");
+const { checkImage, deleteImage } = require("./images");
 const { NotFoundError, BadRequestError } = require("../../errors");
 
 const getAllPayments = async (req) => {

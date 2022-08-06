@@ -1,5 +1,5 @@
 const Events = require("../../api/v1/events/model");
-const { checkImage } = require("./images");
+const { checkImage, deleteImage } = require("./images");
 const { checkCategories } = require("./categories");
 const { checkTalents } = require("./talents");
 const { NotFoundError, BadRequestError } = require("../../errors");
