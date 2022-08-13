@@ -26,7 +26,10 @@ const deleteImage = async (id) => {
     if (!result) throw new NotFoundError(`Tidak ada gambar dengan id : ${id}`);
 
     const imgDir = `${__dirname}/../../../public/${result.name}`;
-    await unlink(imgDir);
+    await unlink(imgDir, (err) => {
+        // in order to skip throw error when specified file is not found
+        if (err) return true;
+    });
 
     await result.remove();
 

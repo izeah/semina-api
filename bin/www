@@ -7,6 +7,7 @@
 const app = require("../app");
 const debug = require("debug")("server-semina:server");
 const http = require("http");
+const cron = require("../app/services/cron");
 
 const db = require("../app/database");
 
@@ -31,6 +32,10 @@ db.on("open", function () {
     server.listen(port);
     server.on("error", onError);
     server.on("listening", onListening);
+
+    // task scheduling
+    console.log("CRON JOB STARTED :");
+    cron.autoDeleteUnusedImages.start();
 });
 
 /**
