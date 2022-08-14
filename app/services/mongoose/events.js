@@ -24,11 +24,13 @@ const getAllEvents = async (req) => {
         condition = { ...condition, talent: talent };
     }
 
-    if (["DRAFT", "PUBLISHED"].includes(status.toUpperCase())) {
-        condition = {
-            ...condition,
-            statusEvent: status.toUpperCase(),
-        };
+    if (status) {
+        if (["DRAFT", "PUBLISHED"].includes(status.toUpperCase())) {
+            condition = {
+                ...condition,
+                statusEvent: status.toUpperCase(),
+            };
+        }
     }
 
     const result = await Events.find(condition)

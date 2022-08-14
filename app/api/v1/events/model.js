@@ -51,7 +51,7 @@ let eventSchema = Schema(
                 message:
                     "Status event harus diisi dengan nilai 'DRAFT' atau 'PUBLISHED'",
             },
-            default: "Draft",
+            default: "DRAFT",
         },
         tickets: {
             type: [ticketCategorySchema],
