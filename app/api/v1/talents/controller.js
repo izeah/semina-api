@@ -23,7 +23,11 @@ const index = async (req, res, next) => {
         const result = await getAllTalents(req);
 
         return res.status(StatusCodes.OK).json({
-            data: result,
+            data: {
+                datas: result.datas,
+                pages: result.pages,
+                total: result.total,
+            },
         });
     } catch (err) {
         next(err);

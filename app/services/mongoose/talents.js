@@ -3,9 +3,13 @@ const { checkImage, deleteImage } = require("./images");
 const { NotFoundError, BadRequestError } = require("../../errors");
 
 const getAllTalents = async (req) => {
-    const { keyword } = req.query;
+    const { page = 1, limit = 10, keyword } = req.query;
 
-    let condition = { organizer: req.user.organizer };
+    let condition = {};
+
+    if (req.user.role !== "owner") {
+        condition = { ...condition, organizer: req.user.organizer };
+    }
 
     if (keyword) {
         condition = { ...condition, name: { $regex: keyword, $options: "i" } };
@@ -20,9 +24,13 @@ const getAllTalents = async (req) => {
             path: "organizer",
             select: "_id organizer",
         })
-        .select("_id name role image organizer");
+        .select("_id name role image organizer")
+        .limit(limit)
+        .skip((page - 1) * limit);
 
-    return result;
+    const count = await Talents.countDocuments(condition);
+
+    return { datas: result, pages: Math.ceil(count / limit), total: count };
 };
 
 const createTalents = async (req) => {

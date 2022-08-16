@@ -8,7 +8,7 @@ const index = async (req, res, next) => {
 
         return res.status(StatusCodes.OK).json({
             data: {
-                datas: result.data,
+                datas: result.datas,
                 pages: result.pages,
                 total: result.total,
             },

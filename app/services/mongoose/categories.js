@@ -7,17 +7,11 @@ const getAllCategories = async (req) => {
     let condition = {};
 
     if (req.user.role !== "owner") {
-        condition = {
-            ...condition,
-            organizer: req.user.organizer,
-        };
+        condition = { ...condition, organizer: req.user.organizer };
     }
 
     if (keyword) {
-        condition = {
-            ...condition,
-            name: { $regex: keyword, $options: "i" },
-        };
+        condition = { ...condition, name: { $regex: keyword, $options: "i" } };
     }
 
     const result = await Categories.find(condition)

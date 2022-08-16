@@ -31,7 +31,7 @@ const getAllOrders = async (req) => {
 
     const count = await Orders.countDocuments(condition);
 
-    return { data: result, pages: Math.ceil(count / limit), total: count };
+    return { datas: result, pages: Math.ceil(count / limit), total: count };
 };
 
 module.exports = {
