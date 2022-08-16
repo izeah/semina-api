@@ -2,14 +2,35 @@ const Categories = require("../../api/v1/categories/model");
 const { NotFoundError, BadRequestError } = require("../../errors");
 
 const getAllCategories = async (req) => {
-    const result = await Categories.find({
-        organizer: req.user.organizer,
-    }).populate({
-        path: "organizer",
-        select: "_id organizer",
-    });
+    const { page = 1, limit = 10, keyword } = req.query;
 
-    return result;
+    let condition = {};
+
+    if (req.user.role !== "owner") {
+        condition = {
+            ...condition,
+            organizer: req.user.organizer,
+        };
+    }
+
+    if (keyword) {
+        condition = {
+            ...condition,
+            name: { $regex: keyword, $options: "i" },
+        };
+    }
+
+    const result = await Categories.find(condition)
+        .populate({
+            path: "organizer",
+            select: "_id organizer",
+        })
+        .limit(limit)
+        .skip((page - 1) * limit);
+
+    const count = await Categories.countDocuments(condition);
+
+    return { data: result, pages: Math.ceil(count / limit), total: count };
 };
 
 const createCategories = async (req) => {

@@ -22,7 +22,13 @@ const index = async (req, res, next) => {
     try {
         const result = await getAllCategories(req);
 
-        return res.status(StatusCodes.OK).json({ data: result });
+        return res.status(StatusCodes.OK).json({
+            data: {
+                datas: result.data,
+                pages: result.pages,
+                total: result.total,
+            },
+        });
     } catch (err) {
         next(err);
     }
