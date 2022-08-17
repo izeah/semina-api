@@ -174,7 +174,6 @@ const checkoutOrder = async (req) => {
         tagline: checkEvent.tagline,
         keyPoint: checkEvent.keypoint,
         venueName: checkEvent.venueName,
-        tickets: tickets,
         image: checkEvent.image,
         category: checkEvent.category,
         talent: checkEvent.talent,

@@ -2,7 +2,12 @@ const mongoose = require("mongoose");
 const { model, Schema } = mongoose;
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { jwtSecret, jwtExpirationTime } = require("../../../config");
+const {
+    jwtSecret,
+    jwtExpirationTime,
+    jwtRefreshSecret,
+    jwtRefreshExpirationTime,
+} = require("../../../config");
 
 let userSchema = Schema(
     {
@@ -72,6 +77,26 @@ userSchema.methods.generateToken = function () {
             algorithm: "HS512",
             header: { typ: "JWT", alg: "HS512" },
             expiresIn: jwtExpirationTime,
+        }
+    );
+
+    return token;
+};
+
+userSchema.methods.generateRefreshToken = function () {
+    const token = jwt.sign(
+        {
+            id: this._doc._id,
+            name: this._doc.name,
+            email: this._doc.email,
+            role: this._doc.role,
+            organizer: this._doc.organizer,
+        },
+        jwtRefreshSecret,
+        {
+            algorithm: "HS512",
+            header: { typ: "JWT", alg: "HS512" },
+            expiresIn: jwtRefreshExpirationTime,
         }
     );
 

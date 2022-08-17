@@ -4,6 +4,7 @@ const {
     NotFoundError,
     BadRequestError,
 } = require("../../errors");
+const { createUserRefreshToken } = require("./refreshToken");
 
 const signin = async (req) => {
     const { email, password } = req.body;
@@ -23,12 +24,22 @@ const signin = async (req) => {
     // generate JWT Token
     const token = result.generateToken();
 
+    // generate JWT Refresh Token
+    const refreshToken = result.generateRefreshToken();
+
+    // insert to DB
+    await createUserRefreshToken({
+        refreshToken,
+        user: result._id,
+    });
+
     // convert user model schema to JSON Object
     result = result.toObject();
 
     // delete password on response
     delete result.password;
     result.token = token;
+    result.refreshToken = refreshToken;
 
     return result;
 };

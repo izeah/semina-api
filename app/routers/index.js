@@ -8,4 +8,5 @@ module.exports = {
     organizersRouter: require("../api/v1/organizers/router"),
     ordersRouter: require("../api/v1/orders/router"),
     participantsRouter: require("../api/v1/participants/router"),
+    userRefreshTokenRouter: require("../api/v1/userRefreshToken/router"),
 };

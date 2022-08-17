@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
+const cors = require("cors");
 const { StatusCodes } = require("http-status-codes");
 
 const app = express();
@@ -13,6 +14,7 @@ const {
     logHandler,
 } = require("./app/middlewares");
 
+app.use(cors());
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -31,6 +33,7 @@ const {
     organizersRouter,
     ordersRouter,
     participantsRouter,
+    userRefreshTokenRouter,
 } = require("./app/routers");
 
 // routes-list...
@@ -50,7 +53,8 @@ app.use(
     paymentsRouter,
     organizersRouter,
     authRouter,
-    ordersRouter
+    ordersRouter,
+    userRefreshTokenRouter
 );
 
 // v1 endpoints
