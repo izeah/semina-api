@@ -24,7 +24,11 @@ const index = async (req, res, next) => {
         const result = await getAllEvents(req);
 
         return res.status(StatusCodes.OK).json({
-            data: result,
+            data: {
+                datas: result.data,
+                pages: result.pages,
+                total: result.total,
+            },
         });
     } catch (err) {
         next(err);

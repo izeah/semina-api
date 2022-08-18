@@ -5,7 +5,7 @@ const { checkTalents } = require("./talents");
 const { NotFoundError, BadRequestError } = require("../../errors");
 
 const getAllEvents = async (req) => {
-    const { title, category, talent, status } = req.query;
+    const { title, category, talent, status, page = 1, limit = 10 } = req.query;
 
     let condition = { organizer: req.user.organizer };
 
@@ -14,22 +14,16 @@ const getAllEvents = async (req) => {
     }
 
     if (category) {
-        condition = {
-            ...condition,
-            category: category,
-        };
+        condition = { ...condition, category: { $in: category } };
     }
 
     if (talent) {
-        condition = { ...condition, talent: talent };
+        condition = { ...condition, talent: { $in: talent } };
     }
 
     if (status) {
         if (["DRAFT", "PUBLISHED"].includes(status.toUpperCase())) {
-            condition = {
-                ...condition,
-                statusEvent: status.toUpperCase(),
-            };
+            condition = { ...condition, statusEvent: status.toUpperCase() };
         }
     }
 
@@ -50,9 +44,13 @@ const getAllEvents = async (req) => {
         .populate({
             path: "organizer",
             select: "_id organizer",
-        });
+        })
+        .limit(limit)
+        .skip((page - 1) * limit);
 
-    return result;
+    const count = await Events.countDocuments(condition);
+
+    return { data: result, pages: Math.ceil(count / limit), total: count };
 };
 
 const createEvents = async (req) => {
