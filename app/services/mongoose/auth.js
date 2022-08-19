@@ -17,7 +17,8 @@ const signin = async (req) => {
 
     if (!result) throw new NotFoundError("User tidak terdaftar");
 
-    if (!result.comparePassword(password)) {
+    const isPasswordCorrect = await result.comparePassword(password);
+    if (!isPasswordCorrect) {
         throw new Unauthenticated("Password salah");
     }
 
