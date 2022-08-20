@@ -1,16 +1,17 @@
 const multer = require("multer");
+const slugify = require("slugify");
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, "public/uploads/");
     },
     filename: function (req, file, cb) {
-        cb(
-            null,
+        let filename =
             Math.floor(Math.random() * 999999999) +
-                "-" +
-                encodeURIComponent(file.originalname)
-        );
+            "-" +
+            slugify(file.originalname, "_");
+
+        cb(null, filename);
     },
 });
 
