@@ -7,7 +7,9 @@ const storage = multer.diskStorage({
     filename: function (req, file, cb) {
         cb(
             null,
-            Math.floor(Math.random() * 999999999) + "-" + file.originalname
+            Math.floor(Math.random() * 999999999) +
+                "-" +
+                encodeURIComponent(file.originalname)
         );
     },
 });
