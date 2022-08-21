@@ -19,7 +19,7 @@ const errorHandlerMiddleware = (err, req, res, next) => {
 
     if (err.name === "CastError") {
         customError.msg = err.message;
-        customError.statusCode = StatusCodes.INTERNAL_SERVER_ERROR;
+        customError.statusCode = StatusCodes.BAD_REQUEST;
     }
 
     return res.status(customError.statusCode).json({ msg: customError.msg });

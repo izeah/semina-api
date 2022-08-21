@@ -1,6 +1,7 @@
 const Images = require("../../api/v1/images/model");
 const { NotFoundError } = require("../../errors");
 const { unlink } = require("fs/promises");
+const { existsSync } = require("fs");
 
 const createImages = async (req) => {
     const result = await Images.create({
@@ -26,10 +27,11 @@ const deleteImage = async (id) => {
     if (!result) throw new NotFoundError(`Tidak ada gambar dengan id : ${id}`);
 
     const imgDir = `${__dirname}/../../../public/${result.name}`;
-    await unlink(imgDir, (err) => {
-        // in order to skip throw error when specified file is not found
-        if (err) return true;
-    });
+
+    // check file is exist or not in order to delete file
+    if (existsSync(imgDir)) {
+        await unlink(imgDir);
+    }
 
     await result.remove();
 
