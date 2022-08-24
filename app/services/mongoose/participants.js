@@ -105,6 +105,12 @@ const signinParticipant = async (req) => {
     return result;
 };
 
+const getAllPayments = async (req) => {
+    const result = await Payments.find({}).populate("image");
+
+    return result;
+};
+
 const getAllEvents = async (req) => {
     const result = await Events.find({ statusEvent: "PUBLISHED" })
         .populate("category")
@@ -228,6 +234,7 @@ module.exports = {
     signupParticipant,
     activateParticipant,
     signinParticipant,
+    getAllPayments,
     getAllEvents,
     getOneEvent,
     getAllOrders,

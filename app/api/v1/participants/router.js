@@ -3,6 +3,7 @@ const {
     signup,
     activeParticipant,
     signin,
+    getPayments,
     getAllLandingPage,
     getDetailLandingPage,
     getDashboard,
@@ -17,5 +18,6 @@ router.get("/events", getAllLandingPage);
 router.get("/events/:id", getDetailLandingPage);
 router.get("/orders", participantAuthentication, getDashboard);
 router.post("/checkout", participantAuthentication, checkout);
+router.get("/payments", participantAuthentication, getPayments);
 
 module.exports = router;

@@ -2,6 +2,7 @@ const {
     signupParticipant,
     activateParticipant,
     signinParticipant,
+    getAllPayments,
     getAllEvents,
     getOneEvent,
     getAllOrders,
@@ -46,6 +47,18 @@ const signin = async (req, res, next) => {
     }
 };
 
+const getPayments = async (req, res, next) => {
+    try {
+        const result = await getAllPayments(req);
+
+        return res.status(StatusCodes.OK).json({
+            data: result,
+        });
+    } catch (err) {
+        next(err);
+    }
+};
+
 const getAllLandingPage = async (req, res, next) => {
     try {
         const result = await getAllEvents(req);
@@ -57,6 +70,7 @@ const getAllLandingPage = async (req, res, next) => {
         next(err);
     }
 };
+
 const getDashboard = async (req, res, next) => {
     try {
         const result = await getAllOrders(req);
@@ -95,6 +109,7 @@ module.exports = {
     signup,
     activeParticipant,
     signin,
+    getPayments,
     getAllLandingPage,
     getDetailLandingPage,
     getDashboard,
