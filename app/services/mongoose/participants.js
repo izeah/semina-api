@@ -117,7 +117,7 @@ const getAllEvents = async (req) => {
 const getOneEvent = async (req) => {
     const result = await Events.findOne({ _id: req.params.id })
         .populate("category")
-        .populate("talent")
+        .populate({ path: "talent", populate: { path: "image" } })
         .populate("image");
 
     return result;
