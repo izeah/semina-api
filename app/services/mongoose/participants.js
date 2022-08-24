@@ -124,7 +124,9 @@ const getOneEvent = async (req) => {
 };
 
 const getAllOrders = async (req) => {
-    const result = await Orders.find({ participant: req.participant.id });
+    const result = await Orders.find({
+        participant: req.participant.id,
+    }).populate("historyEvent.image");
     return result;
 };
 
