@@ -27,7 +27,7 @@ const activeParticipant = async (req, res, next) => {
         const result = await activateParticipant(req);
 
         return res.status(StatusCodes.OK).json({
-            data: { token: result },
+            data: result,
         });
     } catch (err) {
         next(err);
@@ -39,7 +39,7 @@ const signin = async (req, res, next) => {
         const result = await signinParticipant(req);
 
         return res.status(StatusCodes.OK).json({
-            data: { token: result },
+            data: result,
         });
     } catch (err) {
         next(err);
@@ -85,11 +85,7 @@ const checkout = async (req, res, next) => {
     try {
         const result = await checkoutOrder(req);
 
-        // return res.status(StatusCodes.CREATED).json({
-        //     data: result,
-        // });
-
-        return res.status(StatusCodes.OK).send(result);
+        return res.status(StatusCodes.OK).json({ data: result });
     } catch (err) {
         next(err);
     }
