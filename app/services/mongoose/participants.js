@@ -106,7 +106,9 @@ const signinParticipant = async (req) => {
 };
 
 const getAllPayments = async (req) => {
-    const result = await Payments.find({}).populate("image");
+    const { organizer } = req.params;
+
+    const result = await Payments.find({ organizer }).populate("image");
 
     return result;
 };
@@ -123,7 +125,7 @@ const getAllEvents = async (req) => {
 const getOneEvent = async (req) => {
     const result = await Events.findOne({ _id: req.params.id })
         .populate("category")
-        .populate({ path: "talent", populate: { path: "image" } })
+        .populate({ path: "talent", populate: "image" })
         .populate("image");
 
     return result;

@@ -18,6 +18,6 @@ router.get("/events", getAllLandingPage);
 router.get("/events/:id", getDetailLandingPage);
 router.get("/orders", participantAuthentication, getDashboard);
 router.post("/checkout", participantAuthentication, checkout);
-router.get("/payments", participantAuthentication, getPayments);
+router.get("/payments/:organizer", participantAuthentication, getPayments);
 
 module.exports = router;

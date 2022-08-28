@@ -2,7 +2,7 @@ const UserRefreshToken = require("../../api/v1/userRefreshToken/model");
 const User = require("../../api/v1/users/model");
 const jwt = require("jsonwebtoken");
 const { jwtRefreshSecret } = require("../../config");
-const { Unauthenticated } = require("../../errors");
+const { Unauthenticated, NotFoundError } = require("../../errors");
 
 const createUserRefreshToken = async (payload) => {
     const result = await UserRefreshToken.create(payload);
@@ -13,6 +13,8 @@ const createUserRefreshToken = async (payload) => {
 const getUserRefreshToken = async (req) => {
     const { refreshToken } = req.params;
     const result = await UserRefreshToken.findOne({ refreshToken });
+
+    if (!result) throw new NotFoundError(`refreshToken tidak valid`);
 
     let payload;
     jwt.verify(
